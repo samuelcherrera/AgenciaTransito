@@ -15,6 +15,7 @@ namespace AgenciaTransito.Controllers
     {
 
         [HttpPost]
+        [Route("Insertar")]
         public async Task<HttpResponseMessage> GrabarArchivo(HttpRequestMessage Request, String Datos, String Proceso)
         {
             clsUpload UploadFiles = new clsUpload();
@@ -25,6 +26,7 @@ namespace AgenciaTransito.Controllers
         }
 
         [HttpGet]
+        [Route("Consultar")]
         public HttpResponseMessage Get(string NombreImagen)
         {
             clsUpload UploadFiles = new clsUpload();
@@ -32,6 +34,7 @@ namespace AgenciaTransito.Controllers
         }
 
         [HttpPut]
+        [Route("Actualizar")]
         public async Task<HttpResponseMessage> ActualizarArchivo(HttpRequestMessage Request, String Datos, String Proceso)
         {
             clsUpload UploadFiles = new clsUpload();
@@ -41,6 +44,14 @@ namespace AgenciaTransito.Controllers
             return await UploadFiles.GrabaArchivo(true);
         }
 
+        [HttpDelete]
+        [Route("Eliminar")]
+        public HttpResponseMessage EliminarArchivo(string NombreImagen)
+        {
+            clsUpload UploadFiles = new clsUpload();
+            return UploadFiles.EliminarArchivo(NombreImagen);
+        }
 
     }
+
 }

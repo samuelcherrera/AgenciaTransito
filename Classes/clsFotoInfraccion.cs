@@ -9,7 +9,7 @@ namespace AgenciaTransito.Classes
     {
 
 
-        private DBTransitoEntities1 DBSuper = new DBTransitoEntities1();// objeto de la bd que permite manipular el CRUD de los objetos generados por el entityFramework
+        private DBTransitoEntities1 DBTransito = new DBTransitoEntities1();// objeto de la bd que permite manipular el CRUD de los objetos generados por el entityFramework
 
         public string idInfraccion { get; set; }
         public List<string> Archivos { get; set; }
@@ -25,8 +25,8 @@ namespace AgenciaTransito.Classes
                         FotoInfraccion Imagen = new FotoInfraccion();
                         Imagen.idInfraccion = Convert.ToInt32(idInfraccion);
                         Imagen.NombreFoto = Archivo;
-                        DBSuper.FotoInfraccions.Add(Imagen);
-                        DBSuper.SaveChanges();
+                        DBTransito.FotoInfraccions.Add(Imagen);
+                        DBTransito.SaveChanges();
                     }
                     return "Imagenes grabadas correctamente";
                 }

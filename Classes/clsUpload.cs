@@ -137,7 +137,7 @@ namespace AgenciaTransito.Classes
         {
             switch (Proceso.ToUpper())
             {
-                case "INFRACCIÓN":
+                case "INFRACCION":
                     clsFotoInfraccion fotoInfraccion = new clsFotoInfraccion();
                     fotoInfraccion.idInfraccion = Datos;//Debe venir la informacion que se procesa en la bd (idInfracción)
                     fotoInfraccion.Archivos = Archivos;
@@ -146,6 +146,30 @@ namespace AgenciaTransito.Classes
                     return "Proceso no válido";
             }
 
+        }
+
+        public HttpResponseMessage EliminarArchivo(string NombreImagen)
+        {
+            try
+
+            {
+                string Ruta = HttpContext.Current.Server.MapPath("~/Archivos");
+
+                string filePath = System.IO.Path.Combine(Ruta, NombreImagen); 
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    return request.CreateResponse(HttpStatusCode.OK, "archivo "+NombreImagen+" eliminado con exito");
+                }
+                else
+                {
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                }
+            }
+            catch (Exception ex)
+            {
+                return request.CreateErrorResponse(System.Net.HttpStatusCode.InternalServerError, "Error al eliminar el archivo: " + ex.Message);
+            }
         }
 
     }

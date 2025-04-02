@@ -11,8 +11,7 @@ namespace AgenciaTransito.Models
 {
     using System;
     using System.Collections.Generic;
-    using Newtonsoft.Json;
-
+    
     public partial class Infraccion
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -25,12 +24,9 @@ namespace AgenciaTransito.Models
         public string PlacaVehiculo { get; set; }
         public System.DateTime FechaInfraccion { get; set; }
         public string TipoInfraccion { get; set; }
-
-        [JsonIgnore]
+    
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FotoInfraccion> FotoInfraccions { get; set; }
-
-        [JsonIgnore]
         public virtual Vehiculo Vehiculo { get; set; }
     }
 }

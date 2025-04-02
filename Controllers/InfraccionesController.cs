@@ -25,14 +25,43 @@ namespace AgenciaTransito.Controllers
         }
 
         [HttpGet]
-        [Route("ConsultarXPlacaVehiculo")]
-        public Infraccion ConsultarXPlacaVehiculo(string PlacaVehiculo)
+        [Route("ConsultarPorPlaca")]
+        public IHttpActionResult ConsultarPorPlaca(string placa)
         {
+            try
+            {
+                DBTransitoEntities1 db = new DBTransitoEntities1(); // Reemplaza con tu contexto de base de datos
 
-            clsInfraccion Infraccion = new clsInfraccion();
-            return Infraccion.Consultar(PlacaVehiculo);
+                var resultado = from infraccion in db.Infraccions
+                                join vehiculo in db.Vehiculoes on infraccion.PlacaVehiculo equals vehiculo.Placa
+                                join foto in db.FotoInfraccions on infraccion.idFotoMulta equals foto.idInfraccion into fotos
+                                where infraccion.PlacaVehiculo == placa
+                                select new
+                                {
+                                    infraccion.PlacaVehiculo,
+                                    vehiculo.TipoVehiculo,
+                                    vehiculo.Marca,
+                                    vehiculo.Color,
+                                    infraccion.FechaInfraccion,
+                                    infraccion.TipoInfraccion,
+                                    infraccion.idFotoMulta,
+                                    NombresFotos = fotos.Select(f => f.NombreFoto).ToList()
+                                };
 
+                if (resultado == null || !resultado.Any())
+                {
+                    return NotFound();
+                }
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
+
+        
 
 
         [HttpPost]

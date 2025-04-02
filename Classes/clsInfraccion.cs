@@ -12,6 +12,11 @@ namespace AgenciaTransito.Classes
         private DBTransitoEntities1 DBTransito = new DBTransitoEntities1();// objeto de la bd que permite manipular el CRUD de los objetos generados por el entityFramework
         public Infraccion infraccion { get; set; } // permite manipular y acceder a los atributos de la tabla infraccion
 
+        // Propiedades adicionales para almacenar datos del vehículo cuando no existe
+        public string TipoVehiculo { get; set; }
+        public string Marca { get; set; }
+        public string Color { get; set; }
+
         public String Insertar()
         {
             try
@@ -60,10 +65,10 @@ namespace AgenciaTransito.Classes
             }
             catch (Exception ex)
             {
-                return "error al insertar la infracción " + ex.Message;
+                return "Error al insertar la infracción: " + ex.InnerException?.Message ?? ex.Message;
             }
-
         }
+
 
         public String Actualizar()
         {
@@ -76,10 +81,8 @@ namespace AgenciaTransito.Classes
             DBTransito.Infraccions.AddOrUpdate(infraccion);//actualiza el empleado de la tabla empleadoes
             DBTransito.SaveChanges();
             return "se ha actualizado el empleado correctamente";
-
-
-
         }
+
         public Infraccion Consultar(String PlacaVehiculo)
         {
             //EXPRESIONES LAMBDA:funciones anonimas que permiten filtrar los datos de una tabla
@@ -95,6 +98,14 @@ namespace AgenciaTransito.Classes
                 .ToList();//consulta todos los empleados por orden de fecha
         }
 
+        public List<Infraccion> ConsultarPorPlaca(String PlacaVehiculo)
+        {
+            return DBTransito.Infraccions
+                .Where(e => e.PlacaVehiculo == PlacaVehiculo)
+                .OrderBy(e => e.FechaInfraccion)
+                .ToList();
+        }
+
         public String Eliminar()
         {
             try
@@ -103,12 +114,11 @@ namespace AgenciaTransito.Classes
                 Infraccion inf = Consultar(infraccion.PlacaVehiculo);
                 if (inf == null)
                 {
-                    return "no existen infracciones relacionadas con la placa "+ infraccion.PlacaVehiculo;
+                    return "no existen infracciones relacionadas con la placa " + infraccion.PlacaVehiculo;
                 }
                 DBTransito.Infraccions.Remove(inf);//actualiza el empleado de la tabla empleadoes
                 DBTransito.SaveChanges();
                 return "se ha eliminado el empleado correctamente";
-
             }
             catch (Exception ex)
             {
@@ -116,5 +126,28 @@ namespace AgenciaTransito.Classes
             }
         }
 
+
+        public IQueryable<object> ObtenerMultasPorPlaca(string placa)
+        {
+            DBTransitoEntities1 db = new DBTransitoEntities1(); // Reemplaza con tu contexto de base de datos
+
+            var resultado = from infraccion in db.Infraccions
+                            join vehiculo in db.Vehiculoes on infraccion.PlacaVehiculo equals vehiculo.Placa
+                            join foto in db.FotoInfraccions on infraccion.idFotoMulta equals foto.idInfraccion into fotos
+                            where infraccion.PlacaVehiculo == placa
+                            select new
+                            {
+                                infraccion.PlacaVehiculo,
+                                vehiculo.TipoVehiculo,
+                                vehiculo.Marca,
+                                vehiculo.Color,
+                                infraccion.FechaInfraccion,
+                                infraccion.TipoInfraccion,
+                                infraccion.idFotoMulta,
+                                NombresFotos = fotos.Select(f => f.NombreFoto).ToList()
+                            };
+
+            return resultado;
+        }
     }
 }
