@@ -16,9 +16,47 @@ namespace AgenciaTransito.Classes
         {
             try
             {
-                DBTransito.Infraccions.Add(infraccion); // agg una nueva infraccion a la tabla infraccion (INSERT)
-                DBTransito.SaveChanges();//guarda cambios en la bd
-                return "infracción por " +infraccion.TipoInfraccion+ " ingresada correctamente para el vehiculo con placa " + infraccion.PlacaVehiculo+" "+infraccion.FechaInfraccion;
+                clsVehiculo clsVeh = new clsVehiculo();
+                var vehiculoExistente = clsVeh.Consultar(infraccion.PlacaVehiculo);
+
+                if (vehiculoExistente == null)
+                {
+                    if (string.IsNullOrEmpty(TipoVehiculo) || string.IsNullOrEmpty(Marca) || string.IsNullOrEmpty(Color))
+                    {
+                        return "Error: La placa " + infraccion.PlacaVehiculo + " no está registrada. Se necesitan los datos del vehículo (tipo, marca y color).";
+                    }
+
+                    Vehiculo nuevoVehiculo = new Vehiculo
+                    {
+                        Placa = infraccion.PlacaVehiculo,
+                        TipoVehiculo = this.TipoVehiculo,
+                        Marca = this.Marca,
+                        Color = this.Color
+                    };
+
+                    clsVeh.vehiculo = nuevoVehiculo;
+                    string resultadoVehiculo = clsVeh.Insertar();
+
+                    if (resultadoVehiculo.StartsWith("error"))
+                    {
+                        return resultadoVehiculo;
+                    }
+
+                    // Volver a consultar el vehículo después de insertarlo
+                    vehiculoExistente = clsVeh.Consultar(infraccion.PlacaVehiculo);
+                }
+
+                // Asegurar que el contexto de la base de datos reconoce la relación
+                infraccion.Vehiculo = DBTransito.Vehiculoes.Find(vehiculoExistente.Placa);
+                if (infraccion.Vehiculo == null)
+                {
+                    return "Error: No se pudo asociar la infracción al vehículo.";
+                }
+
+                DBTransito.Infraccions.Add(infraccion);
+                DBTransito.SaveChanges();
+
+                return "Infracción por " + infraccion.TipoInfraccion + " ingresada correctamente para el vehículo con placa " + infraccion.PlacaVehiculo + " " + infraccion.FechaInfraccion;
             }
             catch (Exception ex)
             {
