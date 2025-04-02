@@ -139,7 +139,7 @@ namespace AgenciaTransito.Classes
             {
                 case "INFRACCIÓN":
                     clsFotoInfraccion fotoInfraccion = new clsFotoInfraccion();
-                    fotoInfraccion.idInfracción = Datos;//Debe venir la informacion que se procesa en la bd (idInfracción)
+                    fotoInfraccion.idInfraccion = Datos;//Debe venir la informacion que se procesa en la bd (idInfracción)
                     fotoInfraccion.Archivos = Archivos;
                     return fotoInfraccion.GrabarImagenes();
                 default:

@@ -169,6 +169,7 @@
     <Compile Include="Classes\clsVehiculo.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InfraccionesController.cs" />
+    <Compile Include="Controllers\UploadFilesController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\VehiculosController.cs" />
     <Compile Include="Global.asax.cs">
