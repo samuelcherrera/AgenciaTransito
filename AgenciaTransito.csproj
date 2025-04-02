@@ -163,10 +163,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Classes\clsFotoInfraccion.cs" />
     <Compile Include="Classes\clsInfraccion.cs" />
+    <Compile Include="Classes\clsUpload.cs" />
+    <Compile Include="Classes\clsVehiculo.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InfraccionesController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\VehiculosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

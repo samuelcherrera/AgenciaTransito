@@ -50,7 +50,7 @@ namespace AgenciaTransito.Classes
             return inf;
         }
 
-        public List<Infraccion> ConsultarTodos()
+        public List<Infraccion> ConsultarTodas()
         {
             return DBTransito.Infraccions
                 .OrderBy(e => e.FechaInfraccion)
