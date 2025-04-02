@@ -11,6 +11,7 @@ namespace AgenciaTransito.Models
 {
     using System;
     using System.Collections.Generic;
+    using NewtonSoft.Json;
     
     public partial class Vehiculo
     {
@@ -25,6 +26,7 @@ namespace AgenciaTransito.Models
         public string Marca { get; set; }
         public string Color { get; set; }
     
+        [JsonIgnore]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Infraccion> Infraccions { get; set; }
     }
